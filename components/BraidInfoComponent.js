@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Text, View } from 'react-native';
 import { Card } from 'react-native-elements';
+import { BRAIDS } from '../shared/braids';
 
 function RenderBraid({ braid }) {
     if (braid) {
@@ -20,8 +21,23 @@ function RenderBraid({ braid }) {
     return <View />;
 }
 
-function BraidInfo(props) {
-    return <RenderBraid braid={props.braid} />
+class BraidInfo extends Component {
+    
+    constructor(props) {
+        super(props);
+        this.state = {
+            braids: BRAIDS
+        };
+    }
+
+    static navigationOptions = {
+        title: 'Selected Braid'
+    }
+    render() {
+        const braidId = this.props.navigation.getParam('braidId');
+        const braid = this.state.braids.filter(braid => braid.id === braidId)
+        return <RenderBraid braid={braid} />
+    }
 }
 
 export default BraidInfo;

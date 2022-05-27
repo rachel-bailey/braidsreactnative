@@ -1,33 +1,42 @@
 import React, { Component } from 'react';
 import SearchBraids from './SearchBraids';
-import { BRAIDS } from '../shared/braids';
-import { View } from 'react-native';
+import { View, Platform } from 'react-native';
+import { createStackNavigator } from 'react-navigation-stack';
+import { createAppContainer } from 'react-navigation';
 import BraidInfo from './BraidInfoComponent';
+import Constants from 'expo-constants';
+
+
+const BraidNavigator = createStackNavigator(
+    {
+        SearchBraids: { screen: SearchBraids },
+        BraidInfo: { screen: BraidInfo }
+    },
+    {
+        initialRouteName: 'SearchBraids',
+        defaultNavigationOptions: {
+            headerStyle: {
+                backgroundColor: '#AC7D88'
+            },
+            headerTintColor: '#F8ECD1',
+            headerTitleStyle: {
+                color: '#F8ECD1'
+            }
+        }
+    }
+);
+
+const AppNavigator= createAppContainer(BraidNavigator);
 
 class Main extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            braids: BRAIDS,
-            selectedBraid: null
-        };
-    }
-
-    onBraidSelect(braidId) {
-        this.setState({selectedBraid: braidId})
-    }
-
     render() {
         return (
-            <View styles={{flex: 1}}>
-                <SearchBraids 
-                    braids={this.state.braids}
-                    onPress={braidId => this.onBraidSelect(braidId)} 
-                />
-                <BraidInfo
-                    braid={this.state.braids.filter(
-                        braid => braid.id === this.state.selectedBraid)[0]}
-                />
+            <View 
+                style={{
+                flex: 1, 
+                paddingTop: Platform.OS === 'ios' ? 0 : Constants.statusBarHeight
+            }}>
+                <AppNavigator />
             </View>
         )
     }
